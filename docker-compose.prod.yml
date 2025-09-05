@@ -1,0 +1,17 @@
+version: '3.8'
+services:
+  server-go:
+    image: ghcr.io/${GITHUB_REPOSITORY}/server:${IMAGE_TAG:-latest}
+    container_name: production-server-go
+    ports:
+      - "8080:8080"
+    restart: unless-stopped
+
+  client-react:
+    image: ghcr.io/${GITHUB_REPOSITORY}/client:${IMAGE_TAG:-latest}
+    container_name: production-client-react
+    ports:
+      - "3000:3000"
+    depends_on:
+      - server-go
+    restart: unless-stopped
