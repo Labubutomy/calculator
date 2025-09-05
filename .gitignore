@@ -1,0 +1,28 @@
+.db
+.idea
+
+# Environment files
+env
+.env
+.env.local
+.env.production
+.env.staging
+
+# IDE
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Runtime
+pids
+*.pid
+*.seed
+*.pid.lock
