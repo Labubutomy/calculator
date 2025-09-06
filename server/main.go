@@ -3,7 +3,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -73,7 +73,7 @@ func calculateExpression(c *gin.Context) {
 	c.Header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept")
 	c.Header("Access-Control-Allow-Credentials", "true")
 
-	body, err := ioutil.ReadAll(c.Request.Body)
+	body, err := io.ReadAll(c.Request.Body)
 
 	if err != nil {
 		setAnswer(c, http.StatusInternalServerError, "body reading error")

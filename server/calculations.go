@@ -2,9 +2,10 @@ package main
 
 import (
 	"errors"
-	"github.com/Knetic/govaluate"
 	"math"
 	"strings"
+
+	"github.com/Knetic/govaluate"
 )
 
 var errInvalidInput = errors.New("invalid input")

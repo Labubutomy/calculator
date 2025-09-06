@@ -1,9 +1,8 @@
 import './App.css';
-import { useState, useEffect, useRef
- } from 'react';
- import {FaDeleteLeft} from 'react-icons/fa6'
- import {TbSquareRoot} from 'react-icons/tb'
- import HistoryScreen from './HistoryScreen';
+import { useState, useEffect, useRef } from 'react';
+import { FaDeleteLeft } from 'react-icons/fa6'
+import { TbSquareRoot } from 'react-icons/tb'
+import HistoryScreen from './HistoryScreen';
 
 
 function App() {
@@ -21,45 +20,40 @@ function App() {
 
     const input = e.target.innerText;
 
-    setInputString((prevInputString) => prevInputString + input);
-  
-    // Перемещаем курсор вправо после вставки
-    cursorPosition.current = inputString.length + input.length;
+    setInputString((prevInputString) => {
+      cursorPosition.current = (prevInputString || "").length + (input || "").length;
+      return prevInputString + input;
+    });
   };
 
   const inputOperator = (e) => {
     const input = e.target.innerText;
-    // Проверяем, является ли последний символ в строке оператором
-    const isLastCharOperator = /[*\/+-]/.test(inputString.charAt(inputString.length - 1));
+    
+    setInputString(prevInputString => {
+      const isLastCharOperator = /[*\/+-]/.test((prevInputString || "").charAt((prevInputString || "").length - 1));
 
-    console.log(input)
-    console.log(isLastCharOperator)
-    // Если последний символ - оператор, заменяем его на новый оператор
-    if (isLastCharOperator) {
-      if(input.localeCompare('x') == 0)
-        setInputString(prevInputString => prevInputString.slice(0, -1) + '*');
-      else
-        setInputString(prevInputString => prevInputString.slice(0, -1) + input);
-      //setVisibleString(prevVisibleString => prevVisibleString.slice(0, -1) + input);
-    } else {
-      if(input.localeCompare('x') == 0)
-        setInputString(prevInputString => prevInputString + '*');
-      else
-        setInputString(prevInputString => prevInputString + input);
-      //setVisibleString(prevVisibleString => prevVisibleString + input);
-    }
-
-    // Перемещаем курсор вправо после вставки
-    cursorPosition.current = inputString.length + input.length;
+      console.log(input)
+      console.log(isLastCharOperator)
+      
+      if (isLastCharOperator) {
+        if((input || "").localeCompare('x') == 0)
+          return prevInputString.slice(0, -1) + '*';
+        else
+          return prevInputString.slice(0, -1) + input;
+      } else {
+        if((input || "").localeCompare('x') == 0)
+          return prevInputString + '*';
+        else
+          return prevInputString + input;
+      }
+    });
   };
 
 
 
 
   useEffect(() => {
-    // Проверяем, изменилась ли строка видимого текста
     if (inputRef.current) {
-      // Перемещаем скролл вправо, чтобы строка была видна
       inputRef.current.scrollLeft = inputRef.current.scrollWidth;
     }
   }, [inputString]);
@@ -71,81 +65,70 @@ function App() {
 
   const equals = () => {
     if (inputString !== "") {
-      // Отправьте inputString на бэкенд для вычислений
       sendInputToBackend();
-      // Вместо этого можно использовать AJAX-запрос или fetch
-      // Ожидайте ответ от бэкенда и обновите состояние с результатом
     }
-    //setInputString(""); // Очищаем строку при нажатии "="
 
   }
     
   const minusPlus = () => {
-    const parts = inputString.split(/([()*%/+-])/); // Разбиваем строку на массив чисел и операторов
-    let lastNumberIndex = parts.length - 1;
-  
-    // Ищем последний элемент в массиве, который является числом
-    while (lastNumberIndex >= 0 && !/[\d.]/.test(parts[lastNumberIndex])) {
-      lastNumberIndex--;
-    }
-  
-    if (lastNumberIndex >= 0 && parts[lastNumberIndex] !== '.') {
-      // Находим последнее введенное число
-      const lastNumber = parseFloat(parts[lastNumberIndex]);
-  
-      // Изменяем его знак
-      const newNumber = -lastNumber;
-  
-      // Обновляем строку inputString с учетом изменений
-      parts[lastNumberIndex] = '(' + newNumber.toString()+')';
-      setInputString(parts.join(''));
-    }
+    setInputString(prevInputString => {
+      const parts = (prevInputString || "").split(/([()*%/+-])/);
+      let lastNumberIndex = parts.length - 1;
+    
+      while (lastNumberIndex >= 0 && !/[\d.]/.test(parts[lastNumberIndex])) {
+        lastNumberIndex--;
+      }
+    
+      if (lastNumberIndex >= 0 && parts[lastNumberIndex] !== '.') {
+        const lastNumber = parseFloat(parts[lastNumberIndex]);
+    
+        const newNumber = -lastNumber;
+    
+        parts[lastNumberIndex] = '(' + newNumber.toString()+')';
+        return parts.join('');
+      }
+      return prevInputString;
+    });
   }
   
   
   const reset = () => {
-    setInputString(""); // Сначала очистим inputString
-    //setVisibleString(""); // Сбрасываем видимую строку на "0"
+    setInputString("");
   };
 
   const deleteBtn = () => {
-    if (inputString.length !== 0){
-      setInputString(inputString.slice(0, -1));
-    }
+    setInputString(prevInputString => {
+      if ((prevInputString || "").length !== 0){
+        return prevInputString.slice(0, -1);
+      }
+      return prevInputString;
+    });
   }
   const sqrtGet = () =>{
-    setInputString((prevInputString) => prevInputString + 'sqrt(');
-  
-    // Перемещаем курсор вправо после вставки
-    cursorPosition.current = inputString.length + 2;
-  
-    //setVisibleString(inputString  + '√(');
+    setInputString((prevInputString) => {
+      cursorPosition.current = (prevInputString || "").length + 5;
+      return prevInputString + 'sqrt(';
+    });
   }
 
   
 
   const sendInputToBackend = () => {
-    // Функция для отправки входной строки на бэкенд
     if (inputString !== "") {
-      // Вы можете использовать AJAX-запрос или fetch для отправки данных на бэкенд
-      // Например, можно отправить их на сервер с помощью fetch
       fetch('http://172.18.0.3:8080/calculate', {
         method: 'POST',
-        body: JSON.stringify({ expression: inputString }), // Отправляем входную строку на бэкенд
+        body: JSON.stringify({ expression: inputString }),
         headers: {
           'Content-Type': 'application/json',
         },
       })
         .then((response) => response.json())
         .then((data) => {
-          // Обрабатываем ответ от бэкенда, если это необходимо
           console.log('Ответ от бэкенда:', data);
           setInputString(data.answer)
           historyRef.current.addToHistory(inputString, data.answer)
-          //setVisibleString(data.answer)
         })
         .catch((error) => {
-          // Обрабатываем ошибку, если она произошла
           console.error('Произошла ошибка:', error);
         });
     }
@@ -154,18 +137,14 @@ function App() {
     const handleKeyPress = (event) => {
       const key = event.key;
   
-      // Проверьте, является ли клавиша цифрой или одним из допустимых операторов
       if (/[\d()+\-*/.%]/.test(key)) {
-        // Если это допустимая клавиша, добавьте ее к inputString
         setInputString((prevInputString) => prevInputString + key);
-        event.preventDefault(); // Предотвратите действие по умолчанию для этой клавиши (например, прокрутку)
+        event.preventDefault();
       }
     };
   
-    // Добавьте обработчик событий клавиатуры при монтировании компонента
     window.addEventListener('keydown', handleKeyPress);
   
-    // Удалите обработчик событий клавиатуры при размонтировании компонента
     return () => {
       window.removeEventListener('keydown', handleKeyPress);
     };
@@ -182,7 +161,6 @@ function App() {
             ref={inputRef}
             autoFocus
             onClick={() => {
-              // При клике на видимую строку устанавливаем фокус на инпут и устанавливаем позицию курсора
               inputRef.current.focus();
               inputRef.current.selectionStart = inputRef.current.selectionEnd = cursorPosition.current;
             }}
