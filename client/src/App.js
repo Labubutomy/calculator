@@ -30,18 +30,18 @@ function App() {
     const input = e.target.innerText;
     
     setInputString(prevInputString => {
-      const isLastCharOperator = /[*\/+-]/.test((prevInputString || "").charAt((prevInputString || "").length - 1));
+      const isLastCharOperator = /[*+-]/.test((prevInputString || "").charAt((prevInputString || "").length - 1));
 
       console.log(input)
       console.log(isLastCharOperator)
       
       if (isLastCharOperator) {
-        if((input || "").localeCompare('x') == 0)
+        if((input || "").localeCompare('x') === 0)
           return prevInputString.slice(0, -1) + '*';
         else
           return prevInputString.slice(0, -1) + input;
       } else {
-        if((input || "").localeCompare('x') == 0)
+        if((input || "").localeCompare('x') === 0)
           return prevInputString + '*';
         else
           return prevInputString + input;

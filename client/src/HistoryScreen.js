@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { forwardRef, useImperativeHandle } from "react";
 
 const HistoryScreen = forwardRef((props, ref) => {
