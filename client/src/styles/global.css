@@ -1,0 +1,100 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 240 10% 98%;
+    --foreground: 240 10% 10%;
+    --card: 0 0% 100%;
+    --card-foreground: 240 10% 10%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 240 10% 10%;
+    --primary: 220 70% 50%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 240 5% 96%;
+    --secondary-foreground: 240 10% 10%;
+    --muted: 240 5% 96%;
+    --muted-foreground: 240 4% 46%;
+    --accent: 220 70% 50%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 240 6% 90%;
+    --input: 240 6% 90%;
+    --ring: 220 70% 50%;
+    --radius: 0.75rem;
+    --navbar-height: 5rem;
+  }
+
+  .dark {
+    --background: 214 25% 11%;
+    --foreground: 214 2% 83%;
+
+    --secondary: 230 15% 16%;
+    --secondary-foreground: 228 3% 62%;
+    
+    --card: 231 12% 13%;
+    --card-foreground: 214 2% 83%;
+
+    --accent: 223 18% 22%;
+    --accent-foreground: 0 0% 100%;
+
+    --primary: 245 64% 55%;
+    
+
+
+    --popover: 240 10% 12%;
+    --popover-foreground: 240 10% 98%;
+    --primary-foreground: 0 0% 100%;
+    --muted: 240 10% 16%;
+    --muted-foreground: 240 5% 65%;
+    --destructive: 0 70% 50%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 240 10% 20%;
+    --input: 240 10% 20%;
+    --ring: 220 70% 55%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+  html {
+    scroll-behavior: smooth;
+  }
+  a:hover {
+    text-decoration: underline;
+    cursor: pointer;
+  }
+}
+
+@layer components {
+  .page-container {
+    @apply px-4 md:px-8 w-full max-w-screen-xl mx-auto;
+  }
+}
+
+/* Подключение шрифтов */
+@font-face {
+  font-family: 'SignPainter';
+  src: url('/src/assets/fonts/signpainter_housescript.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Pacifico';
+  src: url('/src/assets/fonts/Pacifico-Regular.ttf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Montserrat';
+  src: url('/src/assets/fonts/Montserrat-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+}
