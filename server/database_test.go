@@ -121,14 +121,8 @@ func TestAddCalculation_InvalidJSON(t *testing.T) {
 
 	ctx := context.Background()
 	key := "invalid"
-	// создаем тип, который не сериализуется в JSON
-	type Invalid struct {
-		Func func()
-	}
-	value := StoredValue{Answer: "test"}
-	value2 := Invalid{}
 
-	_ = value2 // Чтобы не было ошибки компиляции
+	value := StoredValue{Answer: "test"}
 
 	err := store.AddCalculation(ctx, key, value)
 	assert.NoError(t, err, "AddCalculation should work with valid StoredValue")

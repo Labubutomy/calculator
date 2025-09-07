@@ -18,8 +18,6 @@ func main() {
 	redisPass := os.Getenv("REDIS_PASS")
 	serverAddr := os.Getenv("SERVER_ADDR")
 
-	fmt.Println(redisAddr, redisPass, serverAddr)
-
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 	bd = NewRedisStore(ctx, redisAddr, redisPass)
@@ -65,7 +63,9 @@ func calculateExpression(c *gin.Context) {
 	ans, err := calculate(req.Expression)
 	if err != nil {
 		value2store := StoredValue{Answer: err.Error(), IsCorrect: false}
-		_ = bd.AddCalculation(ctx, req.Expression, value2store)
+		if errBD := bd.AddCalculation(ctx, req.Expression, value2store); errBD != nil {
+			log.Printf("Failed to add calculation for expression [%s]: %s\n", req.Expression, errBD.Error())
+		}
 		log.Printf("We got error for expression [%s]: %s\n", req.Expression, err.Error())
 		setAnswer(c, http.StatusBadRequest, err.Error())
 		return
