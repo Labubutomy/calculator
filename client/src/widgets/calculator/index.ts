@@ -1,1 +1,1 @@
-import { Calculator } from "./ui/Calculator";
+import { Calculator } from './ui/Calculator';

@@ -1,36 +1,49 @@
-import React from "react";
+import React from 'react';
 import { useUnit } from 'effector-react';
-import { buttonClicked, ButtonTypes } from "../../events/button";
+import { buttonClicked, ButtonTypes } from '../../events/button';
+import { cva, VariantProps } from 'class-variance-authority';
 
 export interface ButtonProps {
   label: string;
   value?: string;
-  variant?: 'primary' | 'secondary' | 'accent';
   className?: string;
   type: ButtonTypes;
+  isDisabled?: boolean;
 }
 
-export const Button = ({ className, type, ...props }: ButtonProps) => {
+const button = cva(
+  'border-border border rounded-xl px-3 py-2 text-lg disabled:cursor-not-allowed',
+  {
+    variants: {
+      variant: {
+        primary: 'bg-primary',
+        secondary: 'bg-secondary',
+        accent: 'bg-accent',
+      },
+    },
+    defaultVariants: {
+      variant: 'secondary',
+    },
+  }
+);
+
+export const Button = ({
+  className,
+  type,
+  variant,
+  ...props
+}: VariantProps<typeof button> & ButtonProps) => {
   const handleClick = useUnit(buttonClicked);
 
   const onClick = () => {
-    switch (type) {
-      case ButtonTypes.ADD_VALUE:
-        const value = props.value || ""
-        return handleClick({ type, value })
-      case ButtonTypes.CALCULATE:
-        return handleClick({ type })
-      case ButtonTypes.CLEAR_HISTORY:
-        return handleClick({ type })
-      case ButtonTypes.CLEAR:
-        return handleClick({ type })
-    }
-  }
+    handleClick({ type, value: props.value });
+  };
 
   return (
     <button
+      disabled={props.isDisabled}
       onClick={onClick}
-      className={`${className} bg-${props.variant} border-border border rounded-xl pl-3 pr-3 pt-2 pb-2 text-lg`}
+      className={button({ className, variant })}
     >
       {props.label}
     </button>

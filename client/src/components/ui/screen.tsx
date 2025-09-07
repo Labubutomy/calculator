@@ -1,33 +1,83 @@
+import { cva, VariantProps } from 'class-variance-authority';
+
 export interface ScreenProps {
-  expression?: string,
-  result?: string,
+  expression: string;
+  result: string;
 
-  width?: string,
-  minHeight?: string,
-
-  className?: string,
-
-  resultSize?: string,
-  expressionSize?: string,
-  isPadding?: boolean,
-
-  // expression?: string,
-  // result?: string,
+  className?: string;
+  isCalculateError?: boolean;
+  isCalculating?: boolean;
 }
 
-export const Screen = ({ result = "", expression = "", width = "100%", minHeight = "min-h-94px", resultSize = "text-4xl", expressionSize = "text-lg", isPadding = true, ...props }: ScreenProps) => {
+const screen = cva('', {
+  variants: {
+    variant: {
+      main: 'text-4xl p-3',
+      history: 'text-2xl mt-2',
+    },
+  },
+  defaultVariants: {
+    variant: 'main',
+  },
+});
 
+const expressionField = cva(
+  'text-left text-secondary-foreground overflow-hidden',
+  {
+    variants: {
+      variant: {
+        main: 'text-lg',
+        history: 'text-sm',
+      },
+    },
+    defaultVariants: {
+      variant: 'main',
+    },
+  }
+);
+
+const enteryField = cva('text-right overflow-hidden', {
+  variants: {
+    variant: {
+      main: 'text-4xl',
+      history: 'text-base',
+    },
+  },
+  defaultVariants: {
+    variant: 'main',
+  },
+});
+
+export const Screen = ({
+  result,
+  expression,
+  className,
+  variant,
+  ...props
+}: VariantProps<typeof screen> & ScreenProps) => {
   return (
-    <div className={`w-[${width}] ${minHeight} ${isPadding ? "p-3" : ""} ${props.className} truncate w-22`}>
-      {result && (
-        <div className={`text-lg text text-left text-secondary-foreground ${expressionSize}`}>
-          {expression.replace("=", "").trim()}
+    <div className={screen({ variant, className })}>
+      {props.isCalculateError === true ? (
+        <div className="text-red-500 text-right">Error</div>
+      ) : (
+        <div>
+          {result && (
+            <div className={expressionField({ variant })}>
+              {expression.replace('=', '').trim()}
+            </div>
+          )}
+
+          <div className={enteryField({ variant })}>
+            <span
+              className={
+                props.isCalculating ? 'text-secondary-foreground' : undefined
+              }
+            >
+              {result || expression}
+            </span>
+          </div>
         </div>
       )}
-
-      <div className={`text-4xl text-right ${resultSize}`}>
-        {result || expression}
-      </div>
     </div>
   );
-}
+};

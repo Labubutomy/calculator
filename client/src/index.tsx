@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import Home from './pages/home';
 import './styles/global.css';
-import './logic/button'
+import './logic/button';
 
 const root = ReactDOM.createRoot(document.getElementById('root')!);
 root.render(
@@ -10,4 +10,3 @@ root.render(
     <Home />
   </React.StrictMode>
 );
-

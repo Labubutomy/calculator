@@ -1,1 +1,1 @@
-import { Display } from "./ui/Display";
+import { Display } from './ui/Display';
