@@ -20,7 +20,6 @@ func setupTestRedis(t *testing.T) (*RedisStore, func()) {
 		client: redis.NewClient(&redis.Options{
 			Addr: mr.Addr(),
 		}),
-		ctx: context.Background(),
 	}
 
 	cleanup := func() {
