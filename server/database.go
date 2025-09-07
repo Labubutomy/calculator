@@ -28,7 +28,6 @@ type DataBase interface {
 
 type RedisStore struct {
 	client *redis.Client
-	ctx    context.Context
 }
 
 func (s *RedisStore) AddCalculation(ctx context.Context, calculation string, value StoredValue) error {
@@ -69,8 +68,5 @@ func NewRedisStore(ctx context.Context, addr, password string) *RedisStore {
 	rdb.ConfigSet(ctx, "maxmemory", redisMaxMemory)
 	rdb.ConfigSet(ctx, "maxmemory-policy", redisMaxMemoryPolicy)
 
-	return &RedisStore{
-		client: rdb,
-		ctx:    context.Background(),
-	}
+	return &RedisStore{client: rdb}
 }
