@@ -34,7 +34,7 @@ export const History = () => {
           </div>
         </div>
       ) : (
-        <div className="m-auto bold">No history :(</div>
+        <div className="m-auto font-bold">No history :(</div>
       )}
     </div>
   );
