@@ -28,13 +28,15 @@ jobs:
     - name: Set up Node.js
       uses: actions/setup-node@v4
       with:
-        node-version: '23.11.0'
+        node-version: '20.18.0'
         cache: 'npm'
         cache-dependency-path: client/package-lock.json
 
-    - name: Set up npm version
+    - name: Verify Node.js and npm versions
       working-directory: ./client
-      run: npm install -g npm@11.6.0
+      run: |
+        node --version
+        npm --version
 
     - name: Install Go dependencies
       working-directory: ./server
@@ -46,7 +48,7 @@ jobs:
 
     - name: Install Node dependencies
       working-directory: ./client
-      run: npm ci
+      run: npm ci --no-audit --no-fund
 
     - name: Build React app
       working-directory: ./client
