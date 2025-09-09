@@ -1,10 +1,9 @@
-version: '3'
 services:
   dev-server-go:
     image: server-go
     container_name: dev-server-go
     ports:
-      - "8080:8080"
+      - "8081:8080"
     volumes:
       - ./server:/app
     entrypoint: ["bash"]
@@ -18,6 +17,8 @@ services:
       - "8080:8080"
     volumes:
       - ./server:/app
+    environment:
+      - SERVER_ADDR=:8080
 
   client-react:
     image: client-react
@@ -28,3 +29,6 @@ services:
       - server-go
     volumes:
       - ./client:/app
+    environment:
+      - REACT_APP_API_HOST=localhost:8080
+      - REACT_APP_PROTOCOL=http
