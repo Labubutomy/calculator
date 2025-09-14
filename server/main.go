@@ -3,16 +3,31 @@ package main
 import (
 	"context"
 	"fmt"
-	"github.com/gin-gonic/gin"
 	"log"
 	"net/http"
 	"os"
+
+	"github.com/gin-gonic/gin"
 )
 
 var bd DataBase
 
 func main() {
 	router := gin.Default()
+
+	// CORS middleware
+	router.Use(func(c *gin.Context) {
+		c.Header("Access-Control-Allow-Origin", "*")
+		c.Header("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
+		c.Header("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Authorization")
+
+		if c.Request.Method == "OPTIONS" {
+			c.AbortWithStatus(204)
+			return
+		}
+
+		c.Next()
+	})
 
 	redisAddr := os.Getenv("REDIS_ADDR")
 	redisPass := os.Getenv("REDIS_PASS")
