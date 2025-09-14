@@ -1,4 +1,4 @@
-version: '3'
+version: "3"
 services:
   dev-server-go:
     image: server-go
@@ -28,3 +28,8 @@ services:
       - server-go
     volumes:
       - ./client:/app
+
+  redis:
+    image: redis:latest
+    ports:
+      - "6379:6379"
