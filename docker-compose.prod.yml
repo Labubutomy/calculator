@@ -1,4 +1,4 @@
-version: '3.8'
+version: "3.8"
 services:
   server-go:
     image: ghcr.io/${GITHUB_REPOSITORY}/server:${IMAGE_TAG:-latest}
@@ -15,3 +15,8 @@ services:
     depends_on:
       - server-go
     restart: unless-stopped
+
+  redis:
+    image: redis:latest
+    ports:
+      - "6379:6379"
