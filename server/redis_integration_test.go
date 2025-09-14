@@ -2,27 +2,50 @@ package main
 
 import (
 	"context"
-	"os"
+	"fmt"
 	"testing"
 	"time"
 
 	"github.com/redis/go-redis/v9"
+	"github.com/testcontainers/testcontainers-go"
+	"github.com/testcontainers/testcontainers-go/wait"
 )
 
-func TestRedisIntegration(t *testing.T) {
-	// Если переменная окружения REDIS_ADDR не задана, используется адрес по умолчанию,
-	// совпадающий с именем сервиса в docker-compose
-	redisAddr := os.Getenv("REDIS_ADDR")
-	if redisAddr == "" {
-		redisAddr = "redis:6379"
+func TestRedisIntegrationWithTestcontainers(t *testing.T) {
+	ctx := context.Background()
+
+	req := testcontainers.ContainerRequest{
+		Image:        "redis:latest",
+		ExposedPorts: []string{"6379/tcp"},
+		WaitingFor:   wait.ForListeningPort("6379/tcp"),
 	}
+	redisC, err := testcontainers.GenericContainer(ctx, testcontainers.GenericContainerRequest{
+		ContainerRequest: req,
+		Started:          true,
+	})
+	if err != nil {
+		t.Fatalf("Ошибка при запуске контейнера Redis: %v", err)
+	}
+	defer func() {
+		if err := redisC.Terminate(ctx); err != nil {
+			t.Fatalf("Ошибка при завершении контейнера Redis: %v", err)
+		}
+	}()
+
+	host, err := redisC.Host(ctx)
+	if err != nil {
+		t.Fatalf("Ошибка при получении host контейнера Redis: %v", err)
+	}
+	port, err := redisC.MappedPort(ctx, "6379")
+	if err != nil {
+		t.Fatalf("Ошибка при получении mapped port контейнера Redis: %v", err)
+	}
+	redisAddr := fmt.Sprintf("%s:%s", host, port.Port())
 
 	rdb := redis.NewClient(&redis.Options{
 		Addr:        redisAddr,
 		DialTimeout: 5 * time.Second,
 	})
-
-	ctx := context.Background()
 
 	if err := rdb.Ping(ctx).Err(); err != nil {
 		t.Fatalf("Ошибка при подключении к Redis по адресу '%s': %v", redisAddr, err)
